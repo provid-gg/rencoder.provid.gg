@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Remote Encoder is a free remote control server for your streaming encoder. One command to install — no subscription, no cost, ever."
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Remote Encoder by PROVID</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Remote Encoder" />
+    <meta property="og:url" content="https://rencoder.provid.gg" />
+    <meta property="og:title" content="Remote Encoder by PROVID" />
+    <meta
+      property="og:description"
+      content="Free remote control for your streaming encoder. One command to install, zero subscriptions, no cost ever. Wi-Fi management, live bitrate, multi-modem support."
+    />
+    <meta
+      property="og:image"
+      content="https://rencoder.provid.gg/og-image.png"
+    />
+    <meta property="og:image:width" content="2002" />
+    <meta property="og:image:height" content="816" />
+    <meta property="og:image:alt" content="Remote Encoder by PROVID" />
+    <link rel="stylesheet" href="/css/tailwind.css" />
+  </head>
+  <body class="h-full bg-black text-white antialiased">
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true">
+      <symbol
+        id="ic-plus"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol
+        id="ic-copy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </symbol>
+      <symbol
+        id="ic-check"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol
+        id="ic-external"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </symbol>
+      <symbol
+        id="ic-spin"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </symbol>
+      <symbol
+        id="ic-alert"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </symbol>
+      <symbol
+        id="ic-wifi"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+        <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+        <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none" />
+      </symbol>
+      <symbol
+        id="ic-x"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </symbol>
+      <symbol
+        id="ic-trash"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+        <path d="M10 11v6" />
+        <path d="M14 11v6" />
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+      </symbol>
+    </svg>
+
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 overflow-hidden pointer-events-none"
+    >
+      <div
+        class="absolute -top-64 -right-64 w-[600px] h-[600px] rounded-full opacity-10"
+        style="background: radial-gradient(circle, #facc15 0%, transparent 70%)"
+      ></div>
+      <div
+        class="absolute top-1/2 -left-48 w-[500px] h-[500px] rounded-full opacity-[0.08]"
+        style="background: radial-gradient(circle, #22d3ee 0%, transparent 70%)"
+      ></div>
+      <div
+        class="absolute -bottom-48 right-1/4 w-[400px] h-[400px] rounded-full opacity-10"
+        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"
+      ></div>
+    </div>
+
+    <nav
+      class="relative z-10 flex items-center justify-between px-6 py-5 max-w-6xl mx-auto"
+    >
+      <a href="/" class="flex items-center gap-3">
+        <span class="font-black text-lg tracking-tight text-brand-gradient"
+          >Remote Encoder</span
+        >
+        <span class="hidden sm:inline text-white/30 text-sm">by PROVID</span>
+      </a>
+      <a href="/connect" class="btn-ghost text-sm px-4 py-2">Control Now →</a>
+    </nav>
+
+    <main
+      class="relative z-10 flex flex-col items-center px-6 pt-16 pb-32 max-w-6xl mx-auto"
+    >
+      <div
+        class="flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.07] px-4 py-1.5 text-xs font-semibold text-emerald-300/80 mb-8"
+      >
+        <span
+          class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-slow shrink-0"
+        ></span>
+        Free Now. Free Forever.
+      </div>
+
+      <h1
+        class="text-5xl sm:text-7xl font-black text-center tracking-tight mb-4 leading-none"
+      >
+        Control<br />
+        <span class="text-brand-gradient">YOUR ENCODER(S)</span><br />
+        from anywhere
+      </h1>
+      <p class="text-white/30 text-center text-sm mb-10">
+        No subscription. No cost. Ever.
+      </p>
+
+      <p
+        class="text-white/50 text-center text-lg sm:text-xl max-w-xl mb-10 leading-relaxed"
+      >
+        Remote Encoder is a free remote server for your streaming encoders. One
+        command to install, zero subscriptions.
+      </p>
+
+      <div class="w-full max-w-2xl card p-8 mb-4 animate-fade-in">
+        <h2 class="text-xl font-bold mb-1">Get started</h2>
+        <p class="text-white/40 text-sm mb-6">
+          Generate a unique key for your device.
+        </p>
+
+        <div class="mb-4">
+          <label
+            class="block text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+            >Encoder type</label
+          >
+          <div id="encoder-selector" class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              data-encoder="bela"
+              class="encoder-btn px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 bg-white/5 text-white/50 transition-all hover:text-white hover:bg-white/10"
+            >
+              BELABOX®
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label
+            class="block text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+          >
+            Device name
+            <span class="normal-case font-normal text-white/30"
+              >(optional)</span
+            >
+          </label>
+          <input
+            id="device-name"
+            type="text"
+            maxlength="64"
+            placeholder="e.g. Studio Encoder, Main Device…"
+            class="input-field"
+          />
+        </div>
+
+        <button id="btn-generate" class="btn-primary w-full text-base py-3.5">
+          <svg width="18" height="18"><use href="#ic-plus" /></svg>
+          Generate Device Key
+        </button>
+
+        <div id="result-block" class="hidden mt-6 space-y-4 animate-slide-up">
+          <div>
+            <p
+              class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+            >
+              Your Device Key
+            </p>
+            <div class="flex items-center gap-3">
+              <code
+                id="device-key-display"
+                class="flex-1 rounded-xl border border-white/10 bg-black/60 px-4 py-3 font-mono text-lg font-semibold text-white tracking-widest"
+              ></code>
+              <button id="btn-copy-key" class="btn-ghost shrink-0 px-3 py-3">
+                <svg width="16" height="16"><use href="#ic-copy" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p
+              class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+            >
+              Install — run on your encoder as root
+            </p>
+            <div class="relative">
+              <div
+                id="install-cmd-display"
+                class="code-block pr-12 break-all leading-relaxed text-xs sm:text-sm"
+              ></div>
+              <button
+                id="btn-copy-cmd"
+                class="absolute top-3 right-3 btn-ghost px-2 py-2 rounded-lg"
+              >
+                <svg width="14" height="14"><use href="#ic-copy" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p
+              class="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+            >
+              Uninstall — restores original firmware
+            </p>
+            <div class="relative">
+              <div
+                id="uninstall-cmd-display"
+                class="code-block pr-12 break-all leading-relaxed text-xs sm:text-sm text-red-400/70"
+              ></div>
+              <button
+                id="btn-copy-uninstall"
+                class="absolute top-3 right-3 btn-ghost px-2 py-2 rounded-lg"
+              >
+                <svg width="14" height="14"><use href="#ic-copy" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <a
+            id="control-link"
+            href="#"
+            class="btn-primary w-full text-base py-3.5"
+          >
+            <svg width="16" height="16"><use href="#ic-external" /></svg>
+            Open Control Page
+          </a>
+
+          <div
+            class="flex items-start gap-2.5 rounded-xl border border-yellow-400/20 bg-yellow-400/5 px-4 py-3"
+          >
+            <svg
+              width="14"
+              height="14"
+              class="shrink-0 mt-0.5 text-yellow-400/70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <p class="text-xs text-yellow-300/70 leading-relaxed">
+              <strong class="font-semibold text-yellow-300/90"
+                >Keep this URL private.</strong
+              >
+              Anyone who has it can fully control your device — reboot, change
+              stream settings, manage Wi-Fi.
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="error-block"
+          class="hidden mt-4 toast toast-error animate-slide-up"
+        >
+          <svg width="16" height="16" class="shrink-0 mt-0.5">
+            <use href="#ic-alert" />
+          </svg>
+          <span id="error-msg">Something went wrong. Please try again.</span>
+        </div>
+      </div>
+
+      <div class="w-full max-w-2xl mb-4">
+        <details class="card px-5 py-4 group">
+          <summary
+            class="flex items-center justify-between cursor-pointer select-none list-none"
+          >
+            <span
+              class="text-sm font-semibold text-white/50 group-open:text-white/70 transition-colors"
+              >Uninstall Remote Encoder</span
+            >
+            <svg
+              width="14"
+              height="14"
+              class="text-white/25 transition-transform group-open:rotate-180"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </summary>
+          <div class="pt-4 space-y-3">
+            <div id="uninstall-encoder-selector" class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                data-encoder="bela"
+                class="uninstall-encoder-btn px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 bg-white/5 text-white/50 transition-all hover:text-white hover:bg-white/10"
+              >
+                BELABOX
+              </button>
+            </div>
+            <p class="text-xs text-white/40 leading-relaxed">
+              Restores the original firmware from backup and removes the device
+              key. Run on your encoder as root.
+            </p>
+            <div class="relative">
+              <div
+                id="uninstall-standalone-cmd"
+                class="code-block pr-10 text-red-400/70 text-xs sm:text-sm break-all leading-relaxed"
+              ></div>
+              <button
+                id="btn-copy-uninstall-standalone"
+                class="absolute top-3 right-3 btn-ghost px-2 py-2 rounded-lg"
+              >
+                <svg width="13" height="13"><use href="#ic-copy" /></svg>
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div
+        id="saved-devices-section"
+        class="hidden w-full max-w-2xl card p-6 mb-8"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold">Your Devices</h3>
+          <span class="text-xs text-white/30">Saved locally</span>
+        </div>
+        <div id="saved-devices-list"></div>
+      </div>
+
+      <div class="w-full max-w-2xl mt-4">
+        <h3
+          class="text-center text-white/40 text-xs font-semibold uppercase tracking-widest mb-8"
+        >
+          How it works
+        </h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="card p-5 text-center">
+            <div
+              class="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center text-lg font-black text-black"
+              style="background: linear-gradient(135deg, #facc15, #fbbf24)"
+            >
+              1
+            </div>
+            <p class="font-semibold text-sm mb-1">Generate a key</p>
+            <p class="text-white/40 text-xs leading-relaxed">
+              Create a unique key for each device above.
+            </p>
+          </div>
+          <div class="card p-5 text-center">
+            <div
+              class="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center text-lg font-black text-black"
+              style="background: linear-gradient(135deg, #22d3ee, #38bdf8)"
+            >
+              2
+            </div>
+            <p class="font-semibold text-sm mb-1">Install on device</p>
+            <p class="text-white/40 text-xs leading-relaxed">
+              SSH into your encoder and run the one-liner install command.
+            </p>
+          </div>
+          <div class="card p-5 text-center">
+            <div
+              class="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center text-lg font-black text-black"
+              style="background: linear-gradient(135deg, #22d3ee, #2563eb)"
+            >
+              3
+            </div>
+            <p class="font-semibold text-sm mb-1">Control remotely</p>
+            <p class="text-white/40 text-xs leading-relaxed">
+              Open the control URL from any device, anywhere in the world.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full max-w-2xl mt-16">
+        <h3
+          class="text-center text-white/40 text-xs font-semibold uppercase tracking-widest mb-8"
+        >
+          What you can do
+        </h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="card p-5 flex gap-4 items-start">
+            <div
+              class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-sm"
+              style="background: rgba(34, 211, 238, 0.1); color: #22d3ee"
+            >
+              ▶
+            </div>
+            <div>
+              <p class="font-semibold text-sm mb-1">Start &amp; stop streams</p>
+              <p class="text-white/40 text-xs leading-relaxed">
+                Control your stream remotely with one tap.
+              </p>
+            </div>
+          </div>
+          <div class="card p-5 flex gap-4 items-start">
+            <div
+              class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-sm"
+              style="background: rgba(250, 204, 21, 0.1); color: #facc15"
+            >
+              ⚙
+            </div>
+            <div>
+              <p class="font-semibold text-sm mb-1">Configure destinations</p>
+              <p class="text-white/40 text-xs leading-relaxed">
+                Change SRTLA address, port, stream ID on the fly.
+              </p>
+            </div>
+          </div>
+          <div class="card p-5 flex gap-4 items-start">
+            <div
+              class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-sm"
+              style="background: rgba(129, 140, 248, 0.1); color: #818cf8"
+            >
+              ⊕
+            </div>
+            <div>
+              <p class="font-semibold text-sm mb-1">Manage Wi-Fi</p>
+              <p class="text-white/40 text-xs leading-relaxed">
+                Scan, connect and forget networks from the browser.
+              </p>
+            </div>
+          </div>
+          <div class="card p-5 flex gap-4 items-start">
+            <div
+              class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center text-sm"
+              style="background: rgba(52, 211, 153, 0.1); color: #34d399"
+            >
+              ⬡
+            </div>
+            <div>
+              <p class="font-semibold text-sm mb-1">
+                Monitor modems &amp; bitrate
+              </p>
+              <p class="text-white/40 text-xs leading-relaxed">
+                Live per-interface throughput and signal info.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full max-w-2xl mt-16">
+        <h3
+          class="text-center text-white/40 text-xs font-semibold uppercase tracking-widest mb-8"
+        >
+          Built for
+        </h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          <div
+            class="gradient-border p-5 flex flex-col items-center gap-3 text-center w-52"
+          >
+            <p class="font-bold text-white text-sm">BELABOX</p>
+            <p class="text-white/40 text-xs leading-relaxed">
+              Open-source SRTLA encoder. The original.
+            </p>
+            <div class="flex gap-2 mt-1">
+              <a
+                href="https://github.com/belabox"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-black transition-all hover:scale-105"
+                style="background: linear-gradient(135deg, #facc15, #22d3ee)"
+              >
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="relative z-10 border-t border-white/5 px-6 pt-10 pb-8">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <div class="flex flex-col items-center gap-4">
+          <p
+            class="text-xs font-semibold text-white/25 uppercase tracking-widest"
+          >
+            Compatible with
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-semibold text-white/50"
+            >
+              BELABOX
+            </span>
+          </div>
+          <p class="text-white/20 text-xs text-center max-w-md leading-relaxed">
+            Remote Encoder is an independent open-source project by PROVID — not
+            affiliated with, endorsed by, or an official product of any listed
+            manufacturer.
+          </p>
+        </div>
+
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/30 border-t border-white/5 pt-6"
+        >
+          <span
+            >Remote Encoder by
+            <a
+              href="https://provid.gg"
+              target="_blank"
+              rel="noopener"
+              class="text-white/50 hover:text-white transition-colors"
+              >PROVID</a
+            ></span
+          >
+          <div class="flex items-center gap-6">
+            <a
+              href="https://provid.gg/legal/imprint"
+              target="_blank"
+              rel="noopener"
+              class="hover:text-white transition-colors"
+              >Imprint</a
+            >
+            <a
+              href="https://provid.gg/legal/privacy"
+              target="_blank"
+              rel="noopener"
+              class="hover:text-white transition-colors"
+              >Privacy</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/js/home.js"></script>
+  </body>
+</html>

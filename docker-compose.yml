@@ -1,0 +1,16 @@
+services:
+  app:
+    image: ghcr.io/provid-gg/rencoder.provid.gg
+    restart: on-failure
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      BASE_URL: https://your-domain.com
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:${PORT}/internal-api/heartbeat || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

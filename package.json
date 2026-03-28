@@ -1,0 +1,32 @@
+{
+  "name": "rencoder.provid.gg",
+  "version": "1.0.0",
+  "description": "Remote Encoder — Free, self-hosted encoder remote by PROVID",
+  "type": "module",
+  "author": "Nico Laeser / PROVID",
+  "private": true,
+  "scripts": {
+    "build:ts": "tsc",
+    "build:css": "node_modules/.bin/tailwindcss -i tailwind.input.css -o public/css/tailwind.css --minify",
+    "build:inject": "node scripts/inject-domain.mjs",
+    "build": "npm run build:inject && npm run build:ts && npm run build:css",
+    "dev": "node scripts/inject-domain.mjs && concurrently \"tsc --watch\" \"node_modules/.bin/tailwindcss -i tailwind.input.css -o public/css/tailwind.css --watch\" \"node --watch dist/server.js\"",
+    "start": "node dist/server.js",
+    "prettier": "npx prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md,yml,yaml}\" \"public/**/*.{html,js,css,json}\"",
+    "cu": "npx npm-check-updates -u"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "@types/ws": "^8.18.1",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2"
+  }
+}

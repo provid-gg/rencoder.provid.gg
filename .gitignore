@@ -1,0 +1,8 @@
+.idea
+.env
+node_modules/
+dist/
+public/css/tailwind.css
+public/fonts/
+src/pg/
+.env*

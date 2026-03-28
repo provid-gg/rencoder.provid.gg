@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-pulse-slow:    pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in:       fadeIn 0.3s ease-out;
+  --animate-slide-up:      slideUp 0.3s ease-out;
+  --animate-live-pulse:    livePulse 1.4s ease-in-out infinite;
+  --animate-gradient-move: gradientMove 5s ease infinite;
+  --animate-live-ring:     liveRing 2s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes gradientMove {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+@keyframes liveRing {
+  0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,0.18), 0 0 0 0 rgba(239,68,68,0.22); }
+  50%       { box-shadow: 0 0 60px rgba(239,68,68,0.30), 0 0 0 6px rgba(239,68,68,0.08); }
+}
+
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  
+  .text-brand-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, #facc15, #22d3ee, #2563eb);
+  }
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #facc15 0%, #22d3ee 50%, #2563eb 100%);
+  }
+
+  
+  .card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04];
+  }
+
+  
+  .gradient-border {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1.25rem;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(250,204,21,0.3), rgba(34,211,238,0.18), rgba(37,99,235,0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  
+  .live-glow::before {
+    background: linear-gradient(135deg, rgba(239,68,68,0.5), rgba(239,68,68,0.18));
+  }
+  .live-glow { box-shadow: 0 0 60px rgba(239, 68, 68, 0.08); }
+
+  
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-black transition-all duration-200;
+    background: linear-gradient(135deg, #facc15, #22d3ee);
+  }
+  .btn-primary:hover  { @apply scale-[1.02]; box-shadow: 0 0 24px rgba(34,211,238,0.4); }
+  .btn-primary:active { @apply scale-[0.98]; }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/70 transition-all hover:bg-white/10 hover:text-white;
+  }
+  .btn-danger {
+    @apply inline-flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-500/20;
+  }
+
+  
+  .stream-btn-idle {
+    background: linear-gradient(135deg, #facc15 0%, #22d3ee 45%, #2563eb 100%);
+    background-size: 220% 220%;
+    animation: gradientMove 5s ease infinite;
+    color: #000;
+    font-weight: 900;
+    box-shadow: 0 4px 50px rgba(34,211,238,0.28), 0 0 0 1px rgba(255,255,255,0.12) inset;
+    transition: box-shadow 0.25s, transform 0.2s;
+  }
+  .stream-btn-idle:hover {
+    box-shadow: 0 4px 80px rgba(34,211,238,0.50), 0 0 0 1px rgba(255,255,255,0.18) inset;
+    transform: scale(1.02);
+  }
+  .stream-btn-live {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.38);
+    color: #fca5a5;
+    animation: liveRing 2s ease-in-out infinite;
+    transition: background 0.25s;
+  }
+  .stream-btn-live:hover { background: rgba(239,68,68,0.15); }
+  .stream-btn-disabled {
+    background: rgba(255,255,255,0.035);
+    color: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: not-allowed;
+  }
+
+  
+  .netif-card-eth   { --accent: #22d3ee; }
+  .netif-card-wifi  { --accent: #facc15; }
+  .netif-card-modem { --accent: #818cf8; }
+  .netif-card-other { --accent: #6b7280; }
+  .netif-bar-fill {
+    background: linear-gradient(to right, var(--accent, #22d3ee), color-mix(in srgb, var(--accent, #22d3ee) 55%, #2563eb));
+  }
+
+  
+  .live-dot { animation: livePulse 1.4s ease-in-out infinite; }
+
+  
+  .section-reveal {
+    animation: slideUp 0.25s ease-out both;
+  }
+  .wifi-net-item {
+    animation: fadeSlideIn 0.2s ease-out both;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  
+  .input-field {
+    @apply w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/30 outline-none transition-all;
+    @apply focus:border-cyan-400/50 focus:bg-white/[0.08] focus:ring-1 focus:ring-cyan-400/25;
+  }
+  .select-field {
+    @apply w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white outline-none transition-all appearance-none cursor-pointer;
+    @apply focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/25;
+  }
+  .range-slider {
+    @apply w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none;
+    background: linear-gradient(to right, #facc15, #22d3ee, #2563eb);
+  }
+  .code-block {
+    @apply rounded-xl border border-white/10 bg-black/60 p-4 font-mono text-sm text-emerald-400;
+  }
+
+  
+  .toast         { @apply flex items-start gap-3 rounded-2xl border p-4 text-sm animate-slide-up; }
+  .toast-success { @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-300; }
+  .toast-warning { @apply border-yellow-400/30 bg-yellow-400/10 text-yellow-300; }
+  .toast-error   { @apply border-red-500/30 bg-red-500/10 text-red-300; }
+  .toast-info    { @apply border-cyan-400/30 bg-cyan-400/10 text-cyan-300; }
+
+  
+  .netif-bar { @apply h-1.5 rounded-full bg-white/10 overflow-hidden; }
+}
+
+@layer utilities {
+  .scrollbar-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+}

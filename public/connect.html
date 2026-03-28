@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#000000" />
+    <title>Connect — Remote Encoder</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Remote Encoder" />
+    <meta property="og:url" content="https://rencoder.provid.gg" />
+    <meta property="og:title" content="Remote Encoder — by PROVID" />
+    <meta
+      property="og:description"
+      content="Free remote control for your streaming encoder. One command to install, zero subscriptions, no cost ever. Wi-Fi management, live bitrate, multi-modem support."
+    />
+    <meta
+      property="og:image"
+      content="https://rencoder.provid.gg/og-image.png"
+    />
+    <meta property="og:image:width" content="2002" />
+    <meta property="og:image:height" content="816" />
+    <meta property="og:image:alt" content="Remote Encoder by PROVID" />
+    <link rel="stylesheet" href="/css/tailwind.css" />
+  </head>
+  <body class="min-h-full bg-black text-white antialiased flex flex-col">
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 overflow-hidden pointer-events-none z-0"
+    >
+      <div
+        class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full opacity-[0.06]"
+        style="background: radial-gradient(circle, #22d3ee 0%, transparent 70%)"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-96 h-96 rounded-full opacity-[0.05]"
+        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"
+      ></div>
+    </div>
+
+    <nav
+      class="relative z-10 flex items-center justify-between px-6 py-5 max-w-2xl mx-auto w-full"
+    >
+      <a href="/" class="font-black text-sm text-brand-gradient"
+        >Remote Encoder</a
+      >
+      <a
+        href="/"
+        class="text-sm text-white/40 hover:text-white transition-colors"
+        >← Home</a
+      >
+    </nav>
+
+    <main class="relative z-10 flex-1 max-w-2xl mx-auto w-full px-6 pb-12">
+      <h1 class="text-3xl font-black mb-1">Your devices</h1>
+      <p class="text-white/40 mb-8 text-sm">
+        Select a saved device or enter a key manually.
+      </p>
+
+      <div id="saved-list" class="hidden mb-8">
+        <p
+          class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-3"
+        >
+          Saved
+        </p>
+        <div id="saved-items" class="space-y-2"></div>
+      </div>
+
+      <div class="card p-6 space-y-4">
+        <p
+          class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+        >
+          Add by key
+        </p>
+        <div class="flex gap-2 flex-wrap">
+          <select
+            id="encoder-select"
+            class="input-field text-sm shrink-0 w-auto pr-8"
+          >
+            <option value="bela">BELABOX</option>
+          </select>
+          <input
+            id="key-input"
+            type="text"
+            placeholder="xxxxxxxx-xxxxxxxx"
+            class="input-field font-mono flex-1 min-w-0"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
+          <button class="btn-primary shrink-0 px-5" onclick="goControl()">
+            Connect
+          </button>
+        </div>
+        <p id="error-msg" class="hidden text-xs text-red-400">
+          Invalid key format — keys look like
+          <code class="text-red-300 font-mono">xxxxxxxx-xxxxxxxx</code>.
+        </p>
+      </div>
+
+      <p class="mt-6 text-center text-xs text-white/30">
+        No key yet?
+        <a
+          href="/"
+          class="text-white/50 hover:text-white transition-colors underline underline-offset-2"
+          >Generate one on the homepage.</a
+        >
+      </p>
+    </main>
+
+    <footer
+      class="relative z-10 border-t border-white/[0.06] px-6 py-5 mt-auto"
+    >
+      <div
+        class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/25"
+      >
+        <span
+          >Remote Encoder by
+          <a
+            href="https://provid.gg"
+            target="_blank"
+            rel="noopener"
+            class="text-white/40 hover:text-white transition-colors"
+            >PROVID</a
+          ></span
+        >
+        <div class="flex items-center gap-5">
+          <a
+            href="https://provid.gg/legal/imprint"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/70 transition-colors"
+            >Imprint</a
+          >
+          <a
+            href="https://provid.gg/legal/privacy"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/70 transition-colors"
+            >Privacy</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const STORAGE_KEY = "rencoder_devices";
+
+      function savedDevices() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+        } catch {
+          return [];
+        }
+      }
+      function saveDevices(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      }
+      function removeDevice(key) {
+        saveDevices(savedDevices().filter((d) => d.key !== key));
+        renderSaved();
+      }
+
+      async function checkOnline(key) {
+        try {
+          const res = await fetch(`/api/devices/${key}/status`);
+          if (!res.ok) return false;
+          return (await res.json()).isOnline;
+        } catch {
+          return false;
+        }
+      }
+
+      async function renderSaved() {
+        const devices = savedDevices();
+        const section = document.getElementById("saved-list");
+        const container = document.getElementById("saved-items");
+        if (!devices.length) {
+          section.classList.add("hidden");
+          return;
+        }
+        section.classList.remove("hidden");
+        container.innerHTML = "";
+
+        for (const d of devices) {
+          const row = document.createElement("div");
+          row.className =
+            "flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.07] transition-all group cursor-pointer";
+          row.innerHTML = `
+      <div class="flex items-center gap-2.5 flex-1 min-w-0" onclick="location.href='/control/${d.encoder ?? "bela"}/${d.key}'">
+        <span class="status-dot w-2 h-2 rounded-full bg-white/20 shrink-0"></span>
+        <div class="min-w-0">
+          <p class="font-semibold text-sm truncate">${d.name ?? "Unnamed device"}</p>
+          <p class="font-mono text-xs text-white/30 mt-0.5">${d.key}</p>
+        </div>
+      </div>
+      <button onclick="location.href='/control/${d.encoder ?? "bela"}/${d.key}'"
+              class="btn-primary shrink-0 px-4 py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+        Open →
+      </button>
+      <button onclick="event.stopPropagation(); removeDevice('${d.key}')"
+              class="shrink-0 text-white/20 hover:text-red-400 transition-colors p-1.5 rounded-lg">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    `;
+          container.appendChild(row);
+
+          checkOnline(d.key).then((online) => {
+            const dot = row.querySelector(".status-dot");
+            if (!dot) return;
+            if (online) {
+              dot.className =
+                "status-dot w-2 h-2 rounded-full bg-emerald-400 shrink-0";
+              dot.style.boxShadow = "0 0 6px #34d399";
+            } else {
+              dot.className =
+                "status-dot w-2 h-2 rounded-full bg-white/15 shrink-0";
+            }
+          });
+        }
+      }
+
+      function goControl() {
+        const key = document.getElementById("key-input").value.trim();
+        const encoder = document.getElementById("encoder-select").value;
+        if (!/^[0-9a-f]{16}-[0-9a-f]{16}$/.test(key)) {
+          document.getElementById("error-msg").classList.remove("hidden");
+          document.getElementById("key-input").focus();
+          return;
+        }
+        const devices = savedDevices().filter((d) => d.key !== key);
+        devices.unshift({
+          key,
+          encoder,
+          name: null,
+          addedAt: new Date().toISOString(),
+        });
+        saveDevices(devices.slice(0, 20));
+        location.href = `/control/${encoder}/${key}`;
+      }
+
+      const input = document.getElementById("key-input");
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") goControl();
+      });
+      input.addEventListener("input", () =>
+        document.getElementById("error-msg").classList.add("hidden"),
+      );
+
+      const qKey = new URLSearchParams(location.search).get("key");
+      if (qKey) input.value = qKey;
+
+      renderSaved();
+    </script>
+  </body>
+</html>

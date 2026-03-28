@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
+info()    { echo -e "${CYAN}[rencoder]${RESET} $*"; }
+success() { echo -e "${GREEN}[rencoder]${RESET} $*"; }
+warn()    { echo -e "${YELLOW}[rencoder]${RESET} $*"; }
+die()     { echo -e "${RED}[rencoder] ERROR:${RESET} $*" >&2; exit 1; }
+
+echo ""
+echo -e "${BOLD}  Remote Encoder by PROVID${RESET}"
+echo -e "  ${CYAN}https://rencoder.provid.gg${RESET}"
+echo ""
+
+KEY="${1:-}"
+[[ -z "$KEY" ]] && die "No key provided.\n  Usage: curl -fsSL https://rencoder.provid.gg/encoders/bela/scripts/install | sudo bash -s -- <YOUR_KEY>"
+echo "$KEY" | grep -qE '^[0-9a-f]{16}-[0-9a-f]{16}$' || die "Invalid key format."
+
+BELAUI_JS="/opt/belaUI/belaUI.js"
+CONFIG_JSON="/opt/belaUI/config.json"
+BACKUP="${BELAUI_JS}.rencoder.bak"
+UPSTREAM="https://raw.githubusercontent.com/BELABOX/belaUI/refs/heads/ws_nodejs/belaUI.js"
+
+[[ $EUID -eq 0 ]]       || die "Please run as root."
+[[ -f "$BELAUI_JS" ]]   || die "belaUI.js not found — is this a Belabox?"
+[[ -f "$CONFIG_JSON" ]] || die "config.json not found."
+command -v python3 >/dev/null 2>&1 || die "python3 is required."
+command -v curl   >/dev/null 2>&1 || die "curl is required."
+
+if grep -qE "rencoder\.provid\.gg|/ws/belaboxremote" "$BELAUI_JS" && [[ ! -f "$BACKUP" ]]; then
+  warn "Patched file detected without backup — restoring clean copy from upstream…"
+  curl -fsSL "$UPSTREAM" -o "$BELAUI_JS" || die "Failed to restore belaUI.js from upstream."
+  success "Restored from upstream."
+elif [[ -f "$BACKUP" ]]; then
+  info "Re-installing — restoring clean backup before re-patching…"
+  cp "$BACKUP" "$BELAUI_JS"
+  success "Restored from backup."
+fi
+
+if [[ ! -f "$BACKUP" ]]; then
+  info "Backing up belaUI.js…"
+  cp "$BELAUI_JS" "$BACKUP"
+  success "Backup → ${BACKUP}"
+fi
+
+info "Patching remote host…"
+sed -i "s|remote\.belabox\.net|rencoder.provid.gg|g" "$BELAUI_JS"
+grep -q "rencoder.provid.gg" "$BELAUI_JS" || die "Host patch failed."
+success "Host → rencoder.provid.gg"
+
+info "Patching WebSocket path…"
+sed -i "s|'/ws/remote'|'/ws/belaboxremote'|g" "$BELAUI_JS"
+grep -q "/ws/belaboxremote" "$BELAUI_JS" || die "WS path patch failed."
+success "WS path → /ws/belaboxremote"
+
+info "Writing device key to config.json…"
+python3 - <<PYTHON
+import json, sys
+try:
+    with open("$CONFIG_JSON") as f: config = json.load(f)
+except Exception as e: print(f"ERROR: {e}", file=sys.stderr); sys.exit(1)
+config["remote_key"] = "$KEY"
+try:
+    with open("$CONFIG_JSON", "w") as f: json.dump(config, f, indent=2); f.write("\n")
+except Exception as e: print(f"ERROR: {e}", file=sys.stderr); sys.exit(1)
+PYTHON
+success "Key written."
+
+info "Restarting belaUI service…"
+if systemctl restart belaUI 2>/dev/null; then
+  success "belaUI restarted."
+else
+  warn "Could not restart belaUI automatically."
+fi
+
+( sleep 30 && reboot ) &>/dev/null & disown
+
+echo ""
+echo -e "${GREEN}${BOLD}  ✓ Remote Encoder installed!${RESET}"
+echo ""
+echo -e "  ${CYAN}${BOLD}https://rencoder.provid.gg/control/bela/${KEY}${RESET}"
+echo ""
+echo -e "  ${YELLOW}Rebooting in 30 seconds — safe to close SSH.${RESET}"
+echo ""

@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#000000" />
+    <title>Control — Remote Encoder</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Remote Encoder" />
+    <meta property="og:url" content="https://rencoder.provid.gg" />
+    <meta property="og:title" content="Remote Encoder — by PROVID" />
+    <meta
+      property="og:description"
+      content="Free remote control for your streaming encoder. One command to install, zero subscriptions, no cost ever. Wi-Fi management, live bitrate, multi-modem support."
+    />
+    <meta
+      property="og:image"
+      content="https://rencoder.provid.gg/og-image.png"
+    />
+    <meta property="og:image:width" content="2002" />
+    <meta property="og:image:height" content="816" />
+    <meta property="og:image:alt" content="Remote Encoder by PROVID" />
+    <link rel="stylesheet" href="/css/tailwind.css" />
+  </head>
+  <body class="min-h-full bg-black text-white antialiased flex flex-col">
+    <svg class="hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="ic-play" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="6 3 20 12 6 21 6 3" />
+      </symbol>
+      <symbol id="ic-stop" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+      </symbol>
+      <symbol
+        id="ic-spin"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </symbol>
+      <symbol
+        id="ic-x"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </symbol>
+      <symbol
+        id="ic-check"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </symbol>
+      <symbol
+        id="ic-ok"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="9 12 11 14 15 10" />
+      </symbol>
+      <symbol
+        id="ic-alert"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </symbol>
+      <symbol
+        id="ic-warn"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path
+          d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+        />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </symbol>
+      <symbol
+        id="ic-copy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </symbol>
+      <symbol
+        id="ic-link"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path
+          d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+        />
+      </symbol>
+      <symbol
+        id="ic-pencil"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+      </symbol>
+      <symbol
+        id="ic-chevron"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </symbol>
+      <symbol
+        id="ic-reboot"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 2v6h-6" />
+        <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+        <path d="M3 22v-6h6" />
+        <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+      </symbol>
+      <symbol
+        id="ic-power"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+        <line x1="12" y1="2" x2="12" y2="12" />
+      </symbol>
+      <symbol
+        id="ic-file"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+      </symbol>
+      <symbol
+        id="ic-terminal"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <polyline points="4 17 10 11 4 5" />
+        <line x1="12" y1="19" x2="20" y2="19" />
+      </symbol>
+      <symbol
+        id="ic-wifi"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+        <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+        <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none" />
+      </symbol>
+    </svg>
+
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+    >
+      <div
+        class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full opacity-[0.05]"
+        style="
+          background: radial-gradient(ellipse, #22d3ee 0%, transparent 65%);
+        "
+      ></div>
+      <div
+        class="absolute -bottom-40 right-0 w-[400px] h-[400px] rounded-full opacity-[0.04]"
+        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"
+      ></div>
+    </div>
+
+    <header
+      class="sticky top-0 z-50 border-b border-white/[0.07] bg-black/80 backdrop-blur-xl shrink-0"
+    >
+      <div
+        class="flex items-center h-14 px-4 sm:px-6 max-w-screen-2xl mx-auto gap-3"
+      >
+        <a href="/" class="shrink-0 flex items-center gap-1.5">
+          <span class="font-black text-sm text-brand-gradient"
+            >Remote Encoder</span
+          >
+          <span
+            class="hidden sm:inline text-[10px] text-white/20 font-medium tracking-wide"
+            >by PROVID</span
+          >
+        </a>
+        <div class="w-px h-4 bg-white/10 shrink-0"></div>
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <div
+            id="device-name-wrap"
+            class="flex items-center gap-1.5 min-w-0 group/name"
+          >
+            <span
+              id="device-name-display"
+              class="hidden font-semibold text-sm truncate max-w-[130px] sm:max-w-xs"
+            ></span>
+            <button
+              id="btn-rename"
+              onclick="startRename()"
+              class="hidden text-white/20 hover:text-cyan-400 transition-colors opacity-0 group-hover/name:opacity-100 shrink-0"
+            >
+              <svg width="11" height="11"><use href="#ic-pencil" /></svg>
+            </button>
+          </div>
+          <div id="rename-form" class="hidden items-center gap-1.5">
+            <input
+              id="rename-input"
+              type="text"
+              maxlength="40"
+              class="text-sm font-semibold bg-transparent border-b border-white/30 focus:border-cyan-400/60 outline-none w-28 sm:w-40 py-0.5 text-white"
+              onkeydown="
+                if (event.key === 'Enter') saveRename();
+                if (event.key === 'Escape') cancelRename();
+              "
+            />
+            <button
+              onclick="saveRename()"
+              class="text-white/30 hover:text-emerald-400 transition-colors"
+            >
+              <svg width="13" height="13"><use href="#ic-check" /></svg>
+            </button>
+            <button
+              onclick="cancelRename()"
+              class="text-white/20 hover:text-white/60 transition-colors"
+            >
+              <svg width="12" height="12"><use href="#ic-x" /></svg>
+            </button>
+          </div>
+          <div
+            id="badge-connecting"
+            class="flex items-center gap-1.5 text-xs text-yellow-300/60"
+          >
+            <svg class="animate-spin w-3 h-3 shrink-0">
+              <use href="#ic-spin" />
+            </svg>
+            <span class="hidden sm:inline text-[11px]">Connecting…</span>
+          </div>
+          <div
+            id="badge-online"
+            class="hidden flex items-center gap-1.5 text-xs text-emerald-400"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-slow shrink-0"
+            ></span>
+            <span class="hidden sm:inline text-[11px]">Online</span>
+          </div>
+          <div
+            id="badge-offline"
+            class="hidden flex items-center gap-1.5 text-xs text-white/30"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-white/20 shrink-0"></span>
+            <span class="hidden sm:inline text-[11px]">Offline</span>
+          </div>
+          <div
+            id="badge-live"
+            class="hidden items-center gap-1.5 text-xs font-bold text-red-400"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-red-400 live-dot shrink-0"
+            ></span
+            >LIVE
+          </div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button
+            id="btn-stream-toggle"
+            onclick="toggleStream()"
+            class="hidden text-xs font-bold rounded-xl px-3 py-1.5 sm:px-4 sm:py-2 transition-all duration-200"
+          ></button>
+          <a
+            href="/connect"
+            class="text-xs text-white/30 hover:text-white/70 transition-colors px-2 py-1.5"
+            >Switch</a
+          >
+          <a
+            href="/"
+            class="hidden sm:inline text-xs text-white/30 hover:text-white/70 transition-colors px-2 py-1.5"
+            >Home</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="overlay-system-cmd"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-md"
+    >
+      <div
+        class="gradient-border p-10 max-w-xs w-full text-center animate-slide-up space-y-5"
+      >
+        <div id="osc-icon" class="text-5xl"></div>
+        <div>
+          <h2 id="osc-title" class="text-xl font-black mb-1"></h2>
+          <p id="osc-msg" class="text-sm text-white/40"></p>
+        </div>
+        <div class="flex justify-center">
+          <svg
+            width="28"
+            height="28"
+            class="text-white/30"
+            style="animation: spin 1.2s linear infinite"
+          >
+            <use href="#ic-spin" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="overlay-error"
+      class="hidden fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/85 backdrop-blur-sm"
+    >
+      <div
+        class="gradient-border p-8 max-w-sm w-full text-center animate-slide-up"
+      >
+        <p class="text-4xl mb-4">⚠️</p>
+        <h2 class="text-lg font-bold mb-2">Unknown Device</h2>
+        <p id="overlay-error-msg" class="text-white/50 text-sm mb-6">
+          This device key was not found.
+        </p>
+        <a href="/connect" class="btn-primary w-full block text-center py-3"
+          >← Back to devices</a
+        >
+      </div>
+    </div>
+
+    <main
+      class="relative z-10 flex-1 max-w-screen-2xl mx-auto w-full px-3 sm:px-5 py-4"
+    >
+      <div id="notifications" class="space-y-2 mb-4"></div>
+
+      <div
+        class="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-4"
+      >
+        <div class="space-y-4">
+          <div
+            id="stream-card"
+            class="gradient-border p-5 sm:p-6 transition-all duration-500"
+          >
+            <div class="flex flex-col lg:flex-row lg:items-stretch gap-5">
+              <button
+                id="btn-stream-big"
+                onclick="toggleStream()"
+                disabled
+                class="stream-btn-disabled rounded-3xl tracking-tight transition-all duration-300 w-full py-9 lg:w-72 lg:shrink-0 lg:min-h-[10rem]"
+              >
+                <span
+                  id="stream-btn-inner"
+                  class="flex flex-col items-center justify-center gap-2"
+                >
+                  <svg width="28" height="28" class="opacity-80">
+                    <use href="#ic-play" />
+                  </svg>
+                  <span
+                    class="text-2xl font-black tracking-tighter leading-none"
+                    >Start Streaming</span
+                  >
+                </span>
+              </button>
+              <div class="flex-1 min-w-0 space-y-4">
+                <div id="live-stats-inline" class="hidden">
+                  <p
+                    class="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-3"
+                  >
+                    Live Throughput
+                  </p>
+                  <div id="live-stats-bars" class="space-y-1.5"></div>
+                </div>
+                <div
+                  id="config-strip"
+                  class="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                >
+                  <div class="col-span-2 sm:col-span-1">
+                    <label
+                      class="block text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-1.5"
+                      >Pipeline</label
+                    >
+                    <div class="relative">
+                      <select
+                        id="sel-pipeline"
+                        class="select-field text-sm"
+                        onchange="onConfigChange()"
+                      >
+                        <option value="">— select —</option>
+                      </select>
+                      <svg
+                        width="11"
+                        height="11"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"
+                      >
+                        <use href="#ic-chevron" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div id="asrc-group">
+                    <label
+                      class="block text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-1.5"
+                      >Audio In</label
+                    >
+                    <div class="relative">
+                      <select
+                        id="sel-asrc"
+                        class="select-field text-sm"
+                        onchange="onConfigChange()"
+                      >
+                        <option value="">None</option>
+                      </select>
+                      <svg
+                        width="11"
+                        height="11"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"
+                      >
+                        <use href="#ic-chevron" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div id="acodec-group">
+                    <label
+                      class="block text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-1.5"
+                      >Audio Codec</label
+                    >
+                    <div class="relative">
+                      <select
+                        id="sel-acodec"
+                        class="select-field text-sm"
+                        onchange="onConfigChange()"
+                      >
+                        <option value="aac">AAC</option>
+                        <option value="opus">Opus</option>
+                      </select>
+                      <svg
+                        width="11"
+                        height="11"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"
+                      >
+                        <use href="#ic-chevron" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label
+                      class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                      >Max Bitrate</label
+                    >
+                    <span class="text-xs font-semibold tabular-nums"
+                      ><span id="br-val" class="text-white">4000</span
+                      ><span class="text-white/35"> Kbps</span></span
+                    >
+                  </div>
+                  <input
+                    id="range-br"
+                    type="range"
+                    min="300"
+                    max="12000"
+                    step="100"
+                    value="4000"
+                    class="range-slider w-full"
+                    oninput="
+                      document.getElementById('br-val').textContent = this.value
+                    "
+                    onchange="onBitrateChange()"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/[0.06]">
+              <label
+                class="flex items-center gap-3 cursor-pointer select-none w-fit group/tog"
+              >
+                <div class="relative">
+                  <input
+                    id="chk-overlay"
+                    type="checkbox"
+                    class="sr-only peer"
+                    onchange="
+                      send({ config: { bitrate_overlay: this.checked } })
+                    "
+                  />
+                  <div
+                    class="w-9 h-5 rounded-full bg-white/10 peer-checked:bg-cyan-500/30 transition-colors border border-white/10 peer-checked:border-cyan-400/30"
+                  ></div>
+                  <div
+                    class="absolute top-1 left-1 w-3 h-3 rounded-full bg-white/35 peer-checked:bg-cyan-400 peer-checked:translate-x-4 transition-all duration-200"
+                  ></div>
+                </div>
+                <span
+                  class="text-xs text-white/40 group-hover/tog:text-white/70 transition-colors"
+                  >Bitrate overlay on device screen</span
+                >
+              </label>
+            </div>
+          </div>
+
+          <div class="gradient-border p-5">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-4"
+            >
+              Stream Destination
+            </h2>
+            <div class="space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label
+                    class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                    >Relay Server</label
+                  >
+                  <button
+                    id="sel-relay-server-reset"
+                    onclick="resetField('sel-relay-server')"
+                    class="hidden text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors"
+                  >
+                    ↩ Reset
+                  </button>
+                </div>
+                <div class="relative">
+                  <select
+                    id="sel-relay-server"
+                    class="select-field text-sm"
+                    onchange="
+                      markDirty('sel-relay-server');
+                      onConfigChange();
+                    "
+                  >
+                    <option value="">Manual (SRTLA)</option>
+                  </select>
+                  <svg
+                    width="11"
+                    height="11"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"
+                  >
+                    <use href="#ic-chevron" />
+                  </svg>
+                </div>
+              </div>
+              <div id="relay-account-group" class="hidden">
+                <div class="flex items-center justify-between mb-1.5">
+                  <label
+                    class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                    >Relay Account</label
+                  >
+                  <button
+                    id="sel-relay-account-reset"
+                    onclick="resetField('sel-relay-account')"
+                    class="hidden text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors"
+                  >
+                    ↩ Reset
+                  </button>
+                </div>
+                <div class="relative">
+                  <select
+                    id="sel-relay-account"
+                    class="select-field text-sm"
+                    onchange="
+                      markDirty('sel-relay-account');
+                      onConfigChange();
+                    "
+                  >
+                    <option value="">None</option>
+                  </select>
+                  <svg
+                    width="11"
+                    height="11"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/30"
+                  >
+                    <use href="#ic-chevron" />
+                  </svg>
+                </div>
+              </div>
+              <div id="manual-srtla-group" class="grid grid-cols-2 gap-3">
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label
+                      class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                      >SRTLA Address</label
+                    >
+                    <button
+                      id="inp-srtla-addr-reset"
+                      onclick="resetField('inp-srtla-addr')"
+                      class="hidden text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors"
+                    >
+                      ↩ Reset
+                    </button>
+                  </div>
+                  <input
+                    id="inp-srtla-addr"
+                    type="text"
+                    placeholder="hostname or IP"
+                    class="input-field text-sm"
+                    oninput="markDirty('inp-srtla-addr')"
+                    onchange="onConfigChange()"
+                  />
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label
+                      class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                      >SRTLA Port</label
+                    >
+                    <button
+                      id="inp-srtla-port-reset"
+                      onclick="resetField('inp-srtla-port')"
+                      class="hidden text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors"
+                    >
+                      ↩ Reset
+                    </button>
+                  </div>
+                  <input
+                    id="inp-srtla-port"
+                    type="text"
+                    placeholder="5000"
+                    class="input-field text-sm"
+                    oninput="markDirty('inp-srtla-port')"
+                    onchange="onConfigChange()"
+                  />
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label
+                    class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                    >SRT Stream ID
+                    <span class="normal-case text-white/20 font-normal"
+                      >(optional)</span
+                    ></label
+                  >
+                  <button
+                    id="inp-srt-sid-reset"
+                    onclick="resetField('inp-srt-sid')"
+                    class="hidden text-[10px] text-cyan-400/70 hover:text-cyan-300 transition-colors"
+                  >
+                    ↩ Reset
+                  </button>
+                </div>
+                <div class="relative">
+                  <input
+                    id="inp-srt-sid"
+                    type="password"
+                    placeholder="stream ID / key"
+                    class="input-field text-sm pr-16"
+                    oninput="markDirty('inp-srt-sid')"
+                    onchange="onConfigChange()"
+                  />
+                  <button
+                    type="button"
+                    onclick="
+                      const f = this.previousElementSibling;
+                      f.type = f.type === 'password' ? 'text' : 'password';
+                      this.textContent =
+                        f.type === 'password' ? 'Show' : 'Hide';
+                    "
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white/30 hover:text-white/70 transition-colors"
+                  >
+                    Show
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gradient-border p-5">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-4"
+            >
+              Encoder Settings
+            </h2>
+            <div class="space-y-4">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label
+                    class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                    >SRT Latency</label
+                  >
+                  <span class="text-xs tabular-nums text-white/60"
+                    ><span id="lat-val">1000</span
+                    ><span class="text-white/30"> ms</span></span
+                  >
+                </div>
+                <input
+                  id="range-lat"
+                  type="range"
+                  min="100"
+                  max="4000"
+                  step="50"
+                  value="1000"
+                  class="range-slider w-full"
+                  oninput="
+                    document.getElementById('lat-val').textContent = this.value;
+                    document
+                      .getElementById('lat-warning')
+                      .classList.toggle('hidden', this.value >= 1500);
+                  "
+                  onchange="onConfigChange()"
+                />
+                <p
+                  id="lat-warning"
+                  class="hidden mt-1.5 text-[10px] text-yellow-400/80"
+                >
+                  ⚠ Below 1500 ms may cause glitches
+                </p>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label
+                    class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+                    >Audio Delay</label
+                  >
+                  <span class="text-xs tabular-nums text-white/60"
+                    ><span id="delay-val">0</span
+                    ><span class="text-white/30"> ms</span></span
+                  >
+                </div>
+                <input
+                  id="range-delay"
+                  type="range"
+                  min="-2000"
+                  max="2000"
+                  step="10"
+                  value="0"
+                  class="range-slider w-full"
+                  oninput="
+                    document.getElementById('delay-val').textContent =
+                      this.value
+                  "
+                  onchange="onConfigChange()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="gradient-border p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h2
+                class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+              >
+                Network
+              </h2>
+              <span
+                id="netif-total"
+                class="text-xs font-mono font-semibold"
+                style="
+                  background: linear-gradient(to right, #facc15, #22d3ee);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "
+              ></span>
+            </div>
+            <div id="netif-list">
+              <p class="text-sm text-white/20 py-4 text-center">
+                Waiting for device…
+              </p>
+            </div>
+          </div>
+
+          <div id="wifi-section" class="gradient-border p-5 hidden">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-3"
+            >
+              Wi-Fi
+            </h2>
+            <div id="wifi-devices" class="space-y-3"></div>
+          </div>
+
+          <div id="modems-section" class="gradient-border p-5 hidden">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-4"
+            >
+              Mobile Data
+            </h2>
+            <div id="modems-list"></div>
+          </div>
+
+          <div id="sensors-section" class="gradient-border p-5 hidden">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-4"
+            >
+              Sensors
+            </h2>
+            <div id="sensors-grid" class="grid grid-cols-2 gap-2"></div>
+          </div>
+
+          <div class="gradient-border p-5 space-y-5">
+            <h2
+              class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+            >
+              System
+            </h2>
+
+            <div id="ssh-section" class="hidden space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span
+                    id="ssh-dot"
+                    class="w-2 h-2 rounded-full bg-white/20 shrink-0"
+                  ></span>
+                  <span class="text-sm font-semibold">SSH</span>
+                  <span class="text-xs text-white/30" id="ssh-state">Off</span>
+                  <span
+                    class="text-xs text-white/20 font-mono"
+                    id="ssh-user"
+                  ></span>
+                </div>
+                <div class="flex gap-1.5">
+                  <button
+                    id="btn-ssh-toggle"
+                    onclick="toggleSSH()"
+                    class="text-xs text-white/40 hover:text-white transition-colors px-2.5 py-1 rounded-lg hover:bg-white/5 border border-white/[0.07]"
+                  >
+                    Enable
+                  </button>
+                  <button
+                    id="btn-ssh-reset"
+                    onclick="resetSSH()"
+                    class="hidden text-xs text-white/40 hover:text-white transition-colors px-2.5 py-1 rounded-lg hover:bg-white/5 border border-white/[0.07]"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+              <div
+                id="ssh-pass-display"
+                class="hidden flex items-center gap-2 bg-emerald-400/5 rounded-xl px-3 py-2 border border-emerald-400/10"
+              >
+                <input
+                  id="ssh-pass-input"
+                  type="password"
+                  readonly
+                  class="flex-1 font-mono text-xs text-emerald-400 bg-transparent outline-none select-all cursor-text min-w-0"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button
+                  onclick="toggleSshPassVis()"
+                  id="btn-ssh-pass-vis"
+                  class="text-[10px] text-white/30 hover:text-white/70 transition-colors shrink-0 select-none px-1.5 py-0.5 rounded border border-white/10 hover:border-white/20"
+                >
+                  Show
+                </button>
+              </div>
+            </div>
+
+            <div class="pb-4 border-b border-white/[0.06]">
+              <label
+                class="flex items-center gap-3 cursor-pointer select-none group/at"
+              >
+                <div class="relative">
+                  <input
+                    id="chk-autostart"
+                    type="checkbox"
+                    class="sr-only peer"
+                    onchange="toggleAutostart()"
+                  />
+                  <div
+                    class="w-9 h-5 rounded-full bg-white/10 peer-checked:bg-yellow-400/30 transition-colors border border-white/10 peer-checked:border-yellow-400/30"
+                  ></div>
+                  <div
+                    class="absolute top-1 left-1 w-3 h-3 rounded-full bg-white/35 peer-checked:bg-yellow-400 peer-checked:translate-x-4 transition-all duration-200"
+                  ></div>
+                </div>
+                <div>
+                  <p
+                    class="text-sm font-semibold group-hover/at:text-white/90 transition-colors"
+                  >
+                    Auto-Start
+                  </p>
+                  <p
+                    id="autostart-label"
+                    class="text-[10px] text-white/30 mt-0.5"
+                  >
+                    Manual start only
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            <div id="btn-sw-update" class="hidden">
+              <button
+                onclick="triggerUpdate()"
+                class="w-full flex items-center justify-between rounded-xl border border-cyan-500/20 bg-cyan-500/5 hover:bg-cyan-500/10 px-4 py-3 transition-all group"
+              >
+                <div class="text-left">
+                  <p
+                    class="text-xs font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors"
+                  >
+                    <span class="upd-label">Software Update Available</span>
+                  </p>
+                  <p class="text-[10px] text-white/30 mt-0.5">
+                    Encoder restarts after install
+                  </p>
+                </div>
+                <svg
+                  class="w-4 h-4 text-cyan-400/60 group-hover:translate-x-0.5 transition-transform"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+
+            <div>
+              <p
+                class="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-3"
+              >
+                Commands
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <button
+                  onclick="
+                    confirmCmd('reboot', 'Reboot the encoder?', 'Reboot')
+                  "
+                  class="group flex flex-col gap-3 rounded-2xl border border-white/[0.07] hover:border-blue-400/25 bg-white/[0.02] hover:bg-blue-500/[0.06] p-4 text-left transition-all duration-200 active:scale-95"
+                >
+                  <div
+                    class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/15 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors"
+                  >
+                    <svg width="16" height="16" class="text-blue-400">
+                      <use href="#ic-reboot" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs font-semibold text-white/55 group-hover:text-white/90 transition-colors leading-none"
+                    >
+                      Reboot
+                    </p>
+                    <p class="text-[10px] text-white/22 mt-1">
+                      Restart encoder
+                    </p>
+                  </div>
+                </button>
+                <button
+                  onclick="
+                    confirmCmd(
+                      'poweroff',
+                      'Power off the encoder?',
+                      'Power Off',
+                    )
+                  "
+                  class="group flex flex-col gap-3 rounded-2xl border border-red-500/10 hover:border-red-500/30 bg-white/[0.02] hover:bg-red-500/[0.06] p-4 text-left transition-all duration-200 active:scale-95"
+                >
+                  <div
+                    class="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center group-hover:bg-red-500/20 transition-colors"
+                  >
+                    <svg width="16" height="16" class="text-red-400">
+                      <use href="#ic-power" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs font-semibold text-red-400/60 group-hover:text-red-400 transition-colors leading-none"
+                    >
+                      Power Off
+                    </p>
+                    <p class="text-[10px] text-white/22 mt-1">Shut down</p>
+                  </div>
+                </button>
+                <button
+                  onclick="sendCommand('get_log')"
+                  class="group flex flex-col gap-3 rounded-2xl border border-white/[0.07] hover:border-emerald-400/25 bg-white/[0.02] hover:bg-emerald-500/[0.06] p-4 text-left transition-all duration-200 active:scale-95"
+                >
+                  <div
+                    class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/15 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors"
+                  >
+                    <svg width="16" height="16" class="text-emerald-400">
+                      <use href="#ic-file" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs font-semibold text-white/55 group-hover:text-white/90 transition-colors leading-none"
+                    >
+                      Download Log
+                    </p>
+                    <p class="text-[10px] text-white/22 mt-1">
+                      Encoder log file
+                    </p>
+                  </div>
+                </button>
+                <button
+                  onclick="sendCommand('get_syslog')"
+                  class="group flex flex-col gap-3 rounded-2xl border border-white/[0.07] hover:border-yellow-400/25 bg-white/[0.02] hover:bg-yellow-500/[0.06] p-4 text-left transition-all duration-200 active:scale-95"
+                >
+                  <div
+                    class="w-9 h-9 rounded-xl bg-yellow-500/10 border border-yellow-500/15 flex items-center justify-center group-hover:bg-yellow-500/20 transition-colors"
+                  >
+                    <svg width="16" height="16" class="text-yellow-400">
+                      <use href="#ic-terminal" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs font-semibold text-white/55 group-hover:text-white/90 transition-colors leading-none"
+                    >
+                      System Log
+                    </p>
+                    <p class="text-[10px] text-white/22 mt-1">
+                      Kernel + system
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div id="log-section" class="hidden">
+              <p
+                class="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-2"
+                id="log-title"
+              >
+                Log
+              </p>
+              <pre
+                id="log-content"
+                class="text-[10px] font-mono text-emerald-400/80 bg-black/50 rounded-xl p-3 max-h-40 overflow-y-auto scrollbar-thin whitespace-pre-wrap border border-white/[0.06] leading-relaxed"
+              ></pre>
+            </div>
+
+            <div id="revisions-section" class="hidden">
+              <p
+                class="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-2"
+              >
+                Versions
+              </p>
+              <div id="revisions-grid" class="space-y-1.5"></div>
+            </div>
+
+            <div class="pt-4 border-t border-white/[0.06] space-y-2">
+              <p
+                class="text-[10px] font-semibold text-white/30 uppercase tracking-widest"
+              >
+                Device Key
+              </p>
+              <div
+                class="flex items-center gap-2 bg-white/[0.03] rounded-xl px-3 py-2.5 border border-white/[0.06]"
+              >
+                <code
+                  id="key-display"
+                  class="flex-1 text-xs font-mono text-white/40 truncate"
+                ></code>
+                <button
+                  onclick="copyDeviceKey()"
+                  title="Copy key"
+                  class="text-white/20 hover:text-white/70 transition-colors p-1"
+                >
+                  <svg width="13" height="13"><use href="#ic-copy" /></svg>
+                </button>
+                <button
+                  onclick="copyControlUrl()"
+                  title="Copy control URL"
+                  class="text-white/20 hover:text-white/70 transition-colors p-1"
+                >
+                  <svg width="13" height="13"><use href="#ic-link" /></svg>
+                </button>
+              </div>
+
+              <p class="text-[10px] text-yellow-400/40 mt-1">
+                Anyone with the control URL can operate this device.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="relative z-10 border-t border-white/[0.05] px-4 sm:px-6 py-5 mt-4 shrink-0"
+    >
+      <div
+        class="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/20"
+      >
+        <span
+          >Remote Encoder by
+          <a
+            href="https://provid.gg"
+            target="_blank"
+            rel="noopener"
+            class="text-white/35 hover:text-white transition-colors"
+            >PROVID</a
+          ></span
+        >
+        <div class="flex items-center gap-5">
+          <a
+            href="https://provid.gg/legal/imprint"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/50 transition-colors"
+            >Imprint</a
+          >
+          <a
+            href="https://provid.gg/legal/privacy"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/50 transition-colors"
+            >Privacy</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <div
+      id="dialog-confirm"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/75 backdrop-blur-md"
+    >
+      <div class="gradient-border p-6 max-w-sm w-full animate-slide-up">
+        <h3 class="font-bold text-base mb-1.5" id="dialog-title">Confirm</h3>
+        <p
+          class="text-white/40 text-sm mb-5 whitespace-pre-line"
+          id="dialog-msg"
+        >
+          Are you sure?
+        </p>
+        <div class="flex gap-2.5">
+          <button
+            onclick="closeDialog()"
+            class="btn-ghost flex-1 justify-center py-2.5 text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            id="dialog-confirm-btn"
+            class="btn-danger flex-1 justify-center py-2.5 text-sm"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="overlay-update"
+      class="hidden fixed bottom-5 right-5 z-50 gradient-border p-4 w-72 animate-slide-up"
+    >
+      <div class="flex items-center gap-2.5 mb-3">
+        <svg class="animate-spin w-3.5 h-3.5 text-cyan-400 shrink-0">
+          <use href="#ic-spin" />
+        </svg>
+        <p class="font-semibold text-sm">Updating…</p>
+      </div>
+      <div class="space-y-1.5 text-xs text-white/40 mb-3">
+        <div class="flex justify-between">
+          <span>Downloading</span><span id="upd-dl">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Unpacking</span><span id="upd-unpack">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Setting up</span><span id="upd-setup">—</span>
+        </div>
+      </div>
+      <div class="h-1 rounded-full bg-white/10 overflow-hidden">
+        <div
+          id="upd-bar"
+          class="h-full rounded-full bg-brand-gradient transition-all duration-500"
+          style="width: 0%"
+        ></div>
+      </div>
+    </div>
+
+    <script src="/encoders/bela/js/control.js"></script>
+  </body>
+</html>
