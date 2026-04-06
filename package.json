@@ -16,14 +16,14 @@
     "cu": "npx npm-check-updates -u"
   },
   "dependencies": {
-    "dotenv": "^17.3.1",
+    "dotenv": "^17.4.0",
     "express": "^5.2.1",
     "ws": "^8.20.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "@types/ws": "^8.18.1",
     "concurrently": "^9.2.1",
     "tailwindcss": "^4.2.2",
