@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// Replaces the default domain (rencoder.provid.gg) with BASE_URL from .env
-// Run during `npm run build` — skipped if BASE_URL is unset.
 
 import { readFileSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
@@ -46,6 +44,8 @@ const FILES = [
   "public/encoders/bela/scripts/uninstall",
   "public/js/home.js",
   "public/encoders/bela/js/control.js",
+  "public/encoders/bpos/control.html",
+  "public/encoders/bpos/js/control.js",
 ];
 
 console.log(`[inject-domain] Injecting ${baseUrl} into files...`);
@@ -60,8 +60,6 @@ for (const rel of FILES) {
     continue;
   }
 
-  // 1. Detect current domain if it's not the default
-  // We look for common patterns that contain the domain
   const patterns = [
     /https:\/\/([a-zA-Z0-9.-]+)\/encoders\/bela\/scripts\/install/,
     /https:\/\/([a-zA-Z0-9.-]+)\/encoders\/bela\/scripts\/uninstall/,
@@ -69,7 +67,7 @@ for (const rel of FILES) {
     /const DEFAULT_URL = "https:\/\/([^"]+)"/,
     /sed -i "s\|([^|]+)\|remote\.belabox\.net\|g"/,
   ];
-  
+
   let detectedHost = null;
   for (const p of patterns) {
     const m = p.exec(content);
@@ -80,33 +78,25 @@ for (const rel of FILES) {
   }
   const detectedUrl = detectedHost ? `https://${detectedHost}` : null;
 
-  // 2. Perform replacements
-  // Order: replace full URLs first, then hostnames
-  
   let updated = content;
 
-  // Replace detected domain if found
   if (detectedUrl && detectedUrl !== baseUrl) {
     updated = updated.replaceAll(detectedUrl, baseUrl);
   }
   if (detectedHost && detectedHost !== hostname) {
     updated = updated.replaceAll(detectedHost, hostname);
-    // Also handle escaped version for sed commands
     const escapedDetectedHost = detectedHost.replaceAll(".", "\\.");
     const escapedHostname = hostname.replaceAll(".", "\\.");
     updated = updated.replaceAll(escapedDetectedHost, escapedHostname);
   }
 
-  // Always replace defaults (handles first-time injection or if detection failed)
   updated = updated.replaceAll(DEFAULT_URL, baseUrl);
   updated = updated.replaceAll(DEFAULT_HOST, hostname);
 
-  // Replace escaped hostnames for sed commands (e.g. rencoder\.provid\.gg)
   const escapedDefaultHost = DEFAULT_HOST.replaceAll(".", "\\.");
   const escapedHostname = hostname.replaceAll(".", "\\.");
   updated = updated.replaceAll(escapedDefaultHost, escapedHostname);
-  
-  // Also handle the generic placeholder just in case
+
   updated = updated.replaceAll("https://your-domain.com", baseUrl);
   updated = updated.replaceAll("your-domain.com", hostname);
   updated = updated.replaceAll("your-domain\\.com", escapedHostname);
