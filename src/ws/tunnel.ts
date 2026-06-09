@@ -56,6 +56,7 @@ export async function handleBackpackTunnel(
     if (typeof msg.remote === "object" && msg.remote !== null) {
       const remote = msg.remote as Record<string, unknown>;
       if (remote["auth/encoder"]) {
+        if (authenticated) return;
         const auth = remote["auth/encoder"] as Record<string, unknown>;
         const k = auth.key as string | undefined;
         if (!k) {
@@ -64,7 +65,11 @@ export async function handleBackpackTunnel(
           return;
         }
         const prev = tunnels.get(k);
-        if (prev && prev.ws !== ws) prev.ws.close(1012, "superseded");
+        if (prev && prev.ws !== ws) {
+          for (const p of prev.pending.values()) p.onEnd("superseded");
+          prev.pending.clear();
+          prev.ws.close(1012, "superseded");
+        }
         key = k;
         authenticated = true;
         const tunnel: Tunnel = {
@@ -87,25 +92,31 @@ export async function handleBackpackTunnel(
     const t = tunnels.get(key);
     if (!t) return;
 
-    const head = msg["bpos/head"] as
-      | { id: string; status: number; headers: Record<string, string[]> }
-      | undefined;
-    if (head) {
-      t.pending.get(head.id)?.onHead(head.status, head.headers || {});
-      return;
-    }
-    const body = msg["bpos/body"] as { id: string; data: string } | undefined;
-    if (body) {
-      t.pending.get(body.id)?.onBody(Buffer.from(body.data, "base64"));
-      return;
-    }
-    const end = msg["bpos/end"] as { id: string; error?: string } | undefined;
-    if (end) {
-      const p = t.pending.get(end.id);
-      if (p) {
-        t.pending.delete(end.id);
-        p.onEnd(end.error);
+    try {
+      const head = msg["bpos/head"] as
+        | { id: string; status: number; headers: Record<string, string[]> }
+        | undefined;
+      if (head) {
+        t.pending.get(head.id)?.onHead(head.status, head.headers || {});
+        return;
       }
+      const body = msg["bpos/body"] as
+        | { id: string; data: string }
+        | undefined;
+      if (body) {
+        t.pending.get(body.id)?.onBody(Buffer.from(body.data, "base64"));
+        return;
+      }
+      const end = msg["bpos/end"] as { id: string; error?: string } | undefined;
+      if (end) {
+        const p = t.pending.get(end.id);
+        if (p) {
+          t.pending.delete(end.id);
+          p.onEnd(end.error);
+        }
+      }
+    } catch (err) {
+      console.error("[tunnel] frame dispatch error —", err);
     }
   });
 
@@ -125,6 +136,8 @@ const HOP_BY_HOP = new Set([
   "proxy-authorization",
 ]);
 
+const HEADER_NAME_RE = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+
 function rewriteSetCookie(
   values: string[],
   pathPrefix: string,
@@ -137,6 +150,13 @@ function rewriteSetCookie(
     if (secure) out += "; Secure";
     return out;
   });
+}
+
+function rewriteLocation(values: string[], pathPrefix: string): string[] {
+  const base = pathPrefix.endsWith("/") ? pathPrefix.slice(0, -1) : pathPrefix;
+  return values.map((v) =>
+    v.startsWith("/") && !v.startsWith("//") ? base + v : v,
+  );
 }
 
 export function proxyToDevice(
@@ -169,25 +189,46 @@ export function proxyToDevice(
     if (ended) return;
     ended = true;
     t.pending.delete(id);
+    if (t.ws.readyState === 1) t.ws.resume();
     if (!res.writableEnded) res.end();
   };
 
   t.pending.set(id, {
     onHead: (status, respHeaders) => {
-      res.statusCode = status;
+      if (res.headersSent || res.writableEnded) return;
+      res.statusCode =
+        Number.isInteger(status) && status >= 100 && status <= 599
+          ? status
+          : 502;
       for (const [name, values] of Object.entries(respHeaders)) {
         const lower = name.toLowerCase();
         if (HOP_BY_HOP.has(lower)) continue;
-        if (lower === "set-cookie") {
-          res.setHeader("set-cookie", rewriteSetCookie(values, pathPrefix, secure));
+        if (!HEADER_NAME_RE.test(name)) continue;
+        try {
+          if (lower === "set-cookie") {
+            res.setHeader(
+              "set-cookie",
+              rewriteSetCookie(values, pathPrefix, secure),
+            );
+          } else if (lower === "location") {
+            res.setHeader("location", rewriteLocation(values, pathPrefix));
+          } else {
+            res.setHeader(name, values.length === 1 ? values[0] : values);
+          }
+        } catch {
           continue;
         }
-        res.setHeader(name, values.length === 1 ? values[0] : values);
       }
       res.flushHeaders();
     },
     onBody: (chunk) => {
-      if (!res.writableEnded) res.write(chunk);
+      if (res.writableEnded) return;
+      if (!res.write(chunk) && t.ws.readyState === 1) {
+        t.ws.pause();
+        res.once("drain", () => {
+          if (t.ws.readyState === 1) t.ws.resume();
+        });
+      }
     },
     onEnd: () => finish(),
   });

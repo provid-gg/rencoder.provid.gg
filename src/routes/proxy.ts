@@ -32,8 +32,8 @@ export async function proxyMiddleware(
   const slash = urlPath.indexOf("/", 1);
   const qmark = urlPath.indexOf("?");
   let keyEnd = urlPath.length;
-  if (slash !== -1) keyEnd = slash;
-  else if (qmark !== -1) keyEnd = qmark;
+  if (slash !== -1) keyEnd = Math.min(keyEnd, slash);
+  if (qmark !== -1) keyEnd = Math.min(keyEnd, qmark);
 
   const key = urlPath.slice(1, keyEnd);
   if (!SAFE_KEY.test(key)) {
