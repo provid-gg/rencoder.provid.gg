@@ -148,3 +148,10 @@ function shutdown(signal: string) {
 
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
+
+process.on("uncaughtException", (err) => {
+  console.error("[server] uncaughtException —", err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[server] unhandledRejection —", reason);
+});
