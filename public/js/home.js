@@ -1,6 +1,42 @@
 const BASE = window.location.origin;
 let currentKey = "";
-let currentEncoder = "bela";
+let currentEncoder = "bpos";
+
+function applyEncoderMode() {
+  const bpos = currentEncoder === "bpos";
+  const show = (id, on) =>
+    document.getElementById(id)?.classList.toggle("hidden", !on);
+  show("bela-name-field", !bpos);
+  show("btn-generate", !bpos);
+  show("bpos-flow", bpos);
+  if (bpos) show("result-block", false);
+  const title = document.getElementById("card-title");
+  const sub = document.getElementById("card-sub");
+  if (title && sub) {
+    title.textContent = bpos ? "Connect your BackpackOS" : "Get started";
+    sub.textContent = bpos
+      ? "Remote Encoder is built in — enter your device key to open it."
+      : "Generate a unique key for your device.";
+  }
+
+  const steps = bpos
+    ? [
+        ["Generate a key on device", "Open Settings → Remote access on your BackpackOS and create a key. rencoder.provid.gg over wss is the default."],
+        ["Enter your key", "Paste the device key above — or scan its QR / import the export file."],
+        ["Control from anywhere", "Open your device's full dashboard remotely, behind your own login."],
+      ]
+    : [
+        ["Generate a key", "Create a unique key for each device above."],
+        ["Install on device", "SSH into your encoder and run the one-liner install command."],
+        ["Control remotely", "Open the control URL from any device, anywhere in the world."],
+      ];
+  steps.forEach(([t, d], i) => {
+    const tEl = document.getElementById(`hiw-t${i + 1}`);
+    const dEl = document.getElementById(`hiw-d${i + 1}`);
+    if (tEl) tEl.textContent = t;
+    if (dEl) dEl.textContent = d;
+  });
+}
 
 document.querySelectorAll(".encoder-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -16,9 +52,41 @@ document.querySelectorAll(".encoder-btn").forEach((btn) => {
       b.classList.toggle("bg-white/5", !active);
       b.classList.toggle("border-transparent", active);
     });
-    if (currentKey) updateCommands(currentKey);
+    applyEncoderMode();
+    if (!bpos() && currentKey) updateCommands(currentKey);
   });
 });
+
+function bpos() {
+  return currentEncoder === "bpos";
+}
+
+function openBpos() {
+  const input = document.getElementById("bpos-key");
+  const raw = input.value.trim();
+  const err = document.getElementById("bpos-key-error");
+  const m = raw.match(/\/control\/(?:bpos|backpackos)\/([0-9a-f]{16,32}-[0-9a-f]{16,32})/i);
+  const key = m ? m[1].toLowerCase() : raw.toLowerCase();
+  if (!/^[0-9a-f]{16,32}-[0-9a-f]{16,32}$/.test(key)) {
+    err?.classList.remove("hidden");
+    input.focus();
+    return;
+  }
+  err?.classList.add("hidden");
+  saveDevice(key, null, "bpos");
+  location.href = `/control/bpos/${key}/`;
+}
+
+document.getElementById("btn-bpos-open")?.addEventListener("click", openBpos);
+document.getElementById("bpos-key")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") openBpos();
+});
+document
+  .getElementById("bpos-key")
+  ?.addEventListener("input", () =>
+    document.getElementById("bpos-key-error")?.classList.add("hidden"),
+  );
+
 document.querySelector(".encoder-btn")?.click();
 
 let currentUninstallEncoder = "bela";
@@ -121,10 +189,11 @@ function savedDevices() {
   }
 }
 
-function saveDevice(key, name) {
+function saveDevice(key, name, encoder = currentEncoder) {
   const devices = savedDevices().filter((d) => d.key !== key);
   devices.unshift({
     key,
+    encoder,
     name: name || null,
     addedAt: new Date().toISOString(),
   });
@@ -132,6 +201,12 @@ function saveDevice(key, name) {
     "rencoder_devices",
     JSON.stringify(devices.slice(0, 20)),
   );
+}
+
+function controlUrl(encoder, key) {
+  return encoder === "bpos"
+    ? `${BASE}/control/bpos/${encodeURIComponent(key)}/`
+    : `${BASE}/control/${encodeURIComponent(encoder ?? "bela")}/${encodeURIComponent(key)}`;
 }
 
 async function copyText(text, btnId) {
@@ -183,7 +258,7 @@ function renderSavedDevices() {
         <p class="text-[11px] text-white/30 font-mono truncate">${escHtml(d.key)}</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
-        <a href="${BASE}/control/${encodeURIComponent(d.encoder ?? "bela")}/${encodeURIComponent(d.key)}" class="btn-ghost text-xs px-3 py-1.5">Control →</a>
+        <a href="${controlUrl(d.encoder, d.key)}" class="btn-ghost text-xs px-3 py-1.5">Control →</a>
         <button onclick="removeDevice('${escHtml(d.key)}')" class="p-1.5 rounded-lg text-white/20 hover:text-red-400 hover:bg-red-500/10 transition-colors">
           <svg width="13" height="13"><use href="#ic-x"/></svg>
         </button>

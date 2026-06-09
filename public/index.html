@@ -202,8 +202,8 @@
       </p>
 
       <div class="w-full max-w-2xl card p-8 mb-4 animate-fade-in">
-        <h2 class="text-xl font-bold mb-1">Get started</h2>
-        <p class="text-white/40 text-sm mb-6">
+        <h2 id="card-title" class="text-xl font-bold mb-1">Get started</h2>
+        <p id="card-sub" class="text-white/40 text-sm mb-6">
           Generate a unique key for your device.
         </p>
 
@@ -215,6 +215,13 @@
           <div id="encoder-selector" class="flex flex-wrap gap-2">
             <button
               type="button"
+              data-encoder="bpos"
+              class="encoder-btn px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 bg-white/5 text-white/50 transition-all hover:text-white hover:bg-white/10"
+            >
+              BackpackOS
+            </button>
+            <button
+              type="button"
               data-encoder="bela"
               class="encoder-btn px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 bg-white/5 text-white/50 transition-all hover:text-white hover:bg-white/10"
             >
@@ -223,7 +230,7 @@
           </div>
         </div>
 
-        <div class="mb-4">
+        <div id="bela-name-field" class="mb-4">
           <label
             class="block text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
           >
@@ -245,6 +252,55 @@
           <svg width="18" height="18"><use href="#ic-plus" /></svg>
           Generate Device Key
         </button>
+
+        <div id="bpos-flow" class="hidden space-y-4">
+          <div
+            class="flex items-start gap-2.5 rounded-xl border border-cyan-400/20 bg-cyan-400/5 px-4 py-3"
+          >
+            <svg
+              width="14"
+              height="14"
+              class="shrink-0 mt-0.5 text-cyan-300/70"
+            >
+              <use href="#ic-wifi" />
+            </svg>
+            <p class="text-xs text-cyan-200/70 leading-relaxed">
+              <strong class="font-semibold text-cyan-200/90"
+                >Remote Encoder is built into BackpackOS.</strong
+              >
+              No install needed. On your device open
+              <span class="font-mono text-cyan-200/90"
+                >Settings → Remote access</span
+              >, generate a key, then paste it here.
+            </p>
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-semibold text-white/50 uppercase tracking-wider mb-2"
+              >Remote link or device key</label
+            >
+            <input
+              id="bpos-key"
+              type="text"
+              placeholder="Paste your remote link or device key"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              class="input-field font-mono"
+            />
+            <p id="bpos-key-error" class="hidden mt-2 text-xs text-red-400">
+              That doesn't look like a BackpackOS key — copy it from
+              <span class="font-mono">Settings → Remote access</span>.
+            </p>
+          </div>
+
+          <button id="btn-bpos-open" class="btn-primary w-full text-base py-3.5">
+            <svg width="16" height="16"><use href="#ic-external" /></svg>
+            Open Remote
+          </button>
+        </div>
 
         <div id="result-block" class="hidden mt-6 space-y-4 animate-slide-up">
           <div>
@@ -430,8 +486,8 @@
             >
               1
             </div>
-            <p class="font-semibold text-sm mb-1">Generate a key</p>
-            <p class="text-white/40 text-xs leading-relaxed">
+            <p id="hiw-t1" class="font-semibold text-sm mb-1">Generate a key</p>
+            <p id="hiw-d1" class="text-white/40 text-xs leading-relaxed">
               Create a unique key for each device above.
             </p>
           </div>
@@ -442,8 +498,8 @@
             >
               2
             </div>
-            <p class="font-semibold text-sm mb-1">Install on device</p>
-            <p class="text-white/40 text-xs leading-relaxed">
+            <p id="hiw-t2" class="font-semibold text-sm mb-1">Install on device</p>
+            <p id="hiw-d2" class="text-white/40 text-xs leading-relaxed">
               SSH into your encoder and run the one-liner install command.
             </p>
           </div>
@@ -454,8 +510,8 @@
             >
               3
             </div>
-            <p class="font-semibold text-sm mb-1">Control remotely</p>
-            <p class="text-white/40 text-xs leading-relaxed">
+            <p id="hiw-t3" class="font-semibold text-sm mb-1">Control remotely</p>
+            <p id="hiw-d3" class="text-white/40 text-xs leading-relaxed">
               Open the control URL from any device, anywhere in the world.
             </p>
           </div>
@@ -540,9 +596,28 @@
           <div
             class="gradient-border p-5 flex flex-col items-center gap-3 text-center w-52"
           >
+            <p class="font-bold text-white text-sm">BackpackOS</p>
+            <p class="text-white/40 text-xs leading-relaxed">
+              Bonded field-streaming OS by PROVID. Remote built in.
+            </p>
+            <div class="flex gap-2 mt-1">
+              <a
+                href="https://provid.gg/products/backpack-os"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-black transition-all hover:scale-105"
+                style="background: linear-gradient(135deg, #facc15, #22d3ee)"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+          <div
+            class="gradient-border p-5 flex flex-col items-center gap-3 text-center w-52"
+          >
             <p class="font-bold text-white text-sm">BELABOX</p>
             <p class="text-white/40 text-xs leading-relaxed">
-              Open-source SRTLA encoder. The original.
+              Open-source SRTLA encoder. A nice add-on.
             </p>
             <div class="flex gap-2 mt-1">
               <a
@@ -569,6 +644,11 @@
             Compatible with
           </p>
           <div class="flex flex-wrap justify-center gap-3">
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-semibold text-white/50"
+            >
+              BackpackOS
+            </span>
             <span
               class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-semibold text-white/50"
             >
