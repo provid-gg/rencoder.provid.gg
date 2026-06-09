@@ -176,6 +176,44 @@
   .netif-bar { @apply h-1.5 rounded-full bg-white/10 overflow-hidden; }
 }
 
+@layer components {
+  .bpos-shell {
+    background: oklch(0.145 0.004 60);
+  }
+  .bpos-card {
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.025);
+  }
+  .bpos-card-accent {
+    position: relative;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.025);
+  }
+  .bpos-card-accent::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(250,204,21,0.35), rgba(34,211,238,0.2), rgba(37,99,235,0.35));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .bpos-gradient-text {
+    background: linear-gradient(to right, #facc15, #22d3ee, #2563eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .bpos-live-dot { animation: livePulse 1.4s ease-in-out infinite; }
+  .bpos-mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+}
+
 @layer utilities {
   .scrollbar-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
 }
