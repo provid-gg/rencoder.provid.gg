@@ -5,8 +5,10 @@ import { fileURLToPath } from "url";
 import express from "express";
 import { WebSocketServer } from "ws";
 import { apiRouter } from "./routes/api.js";
+import { proxyMiddleware } from "./routes/proxy.js";
 import { handleDeviceConnection } from "./ws/device.js";
 import { handleViewerConnection } from "./ws/viewer.js";
+import { handleBackpackTunnel, deviceOnline } from "./ws/tunnel.js";
 import { allow } from "./ratelimit.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -24,10 +26,17 @@ const PUBLIC = path.resolve(__dirname, "../public");
 
 const app = express();
 app.set("trust proxy", 1);
+
+app.use("/control/bpos", proxyMiddleware);
+
 app.use(express.json());
 app.use(express.static(PUBLIC));
 
 app.get("/internal-api/heartbeat", (_req, res) => res.json({ ok: true }));
+
+app.get("/internal-api/bpos/:key/online", (req, res) =>
+  res.json({ isOnline: deviceOnline(req.params.key) }),
+);
 
 app.use("/api", apiRouter);
 
@@ -79,7 +88,24 @@ wss.on("connection", (ws, req) => {
   const url = req.url ?? "";
   const ip = wsClientIp(req);
 
-  if (url === "/ws/belaboxremote" || url.startsWith("/ws/belaboxremote?")) {
+  if (
+    url === "/ws/backpackosremote" ||
+    url.startsWith("/ws/backpackosremote?")
+  ) {
+    if (!allow(ip, 10, 60_000)) {
+      ws.close(1008, "rate limited");
+      return;
+    }
+    handleBackpackTunnel(ws, req).catch(() =>
+      ws.close(1011, "internal error"),
+    );
+    return;
+  }
+
+  if (
+    url === "/ws/belaboxremote" ||
+    url.startsWith("/ws/belaboxremote?")
+  ) {
     if (!allow(ip, 10, 60_000)) {
       ws.close(1008, "rate limited");
       return;
@@ -109,10 +135,16 @@ wss.on("connection", (ws, req) => {
 server.listen(PORT, () => {
   console.log(`Remote Encoder running at http://localhost:${PORT}`);
   console.log(`Device WS:  ws://localhost:${PORT}/ws/belaboxremote`);
+  console.log(`Device WS:  ws://localhost:${PORT}/ws/backpackosremote`);
   console.log(`Viewer WS:  ws://localhost:${PORT}/ws/viewer/:key\n`);
 });
 
-process.on("SIGTERM", () => {
-  console.log("SIGTERM received — shutting down gracefully");
+function shutdown(signal: string) {
+  console.log(`${signal} received — shutting down`);
   server.close(() => process.exit(0));
-});
+  for (const client of wss.clients) client.terminate();
+  setTimeout(() => process.exit(0), 2_000).unref();
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
