@@ -4,8 +4,10 @@
 # ██╔═══╝ ██╔══██╗██║   ██║╚██╗ ██╔╝██║██║  ██║
 # ██║     ██║  ██║╚██████╔╝ ╚████╔╝ ██║██████╔╝
 # ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═══╝  ╚═╝╚═════╝
-#
-# Not for search indexing — disallow all crawlers.
 
 User-agent: *
-Disallow: /
+Disallow: /control/
+Disallow: /api/
+Disallow: /ws/
+Disallow: /scripts/
+Disallow: /install/
