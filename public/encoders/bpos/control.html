@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0e0e0d" />
+    <title>BackpackOS — Remote Encoder</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Remote Encoder" />
+    <meta property="og:url" content="https://rencoder.provid.gg" />
+    <meta property="og:title" content="Remote Encoder — by PROVID" />
+    <meta
+      property="og:description"
+      content="Free remote control for your streaming encoder. One command to install, zero subscriptions, no cost ever. Wi-Fi management, live bitrate, multi-modem support."
+    />
+    <meta
+      property="og:image"
+      content="https://rencoder.provid.gg/og-image.png"
+    />
+    <meta property="og:image:width" content="2002" />
+    <meta property="og:image:height" content="816" />
+    <meta property="og:image:alt" content="Remote Encoder by PROVID" />
+    <link rel="stylesheet" href="/css/tailwind.css" />
+  </head>
+  <body class="bpos-shell min-h-full text-white antialiased flex flex-col">
+    <svg class="hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol
+        id="ic-spin"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      >
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </symbol>
+      <symbol
+        id="ic-copy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </symbol>
+      <symbol
+        id="ic-link"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      </symbol>
+    </svg>
+
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+    >
+      <div
+        class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full opacity-[0.06]"
+        style="
+          background: radial-gradient(ellipse, #22d3ee 0%, transparent 65%);
+        "
+      ></div>
+      <div
+        class="absolute -bottom-40 right-0 w-[400px] h-[400px] rounded-full opacity-[0.05]"
+        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"
+      ></div>
+    </div>
+
+    <header
+      class="sticky top-0 z-50 border-b border-white/[0.07] bg-[oklch(0.145_0.004_60)]/85 backdrop-blur-xl shrink-0"
+    >
+      <div
+        class="flex items-center h-14 px-4 sm:px-6 max-w-screen-md mx-auto gap-3"
+      >
+        <a href="/" class="shrink-0 flex items-center gap-1.5">
+          <span class="font-black text-sm bpos-gradient-text"
+            >Remote Encoder</span
+          >
+          <span
+            class="hidden sm:inline text-[10px] text-white/20 font-medium tracking-wide"
+            >by PROVID</span
+          >
+        </a>
+        <div class="w-px h-4 bg-white/10 shrink-0"></div>
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <span
+            id="device-name-display"
+            class="hidden font-semibold text-sm truncate max-w-[120px] sm:max-w-xs"
+          ></span>
+          <span
+            id="device-version"
+            class="hidden text-[10px] bpos-mono text-white/30"
+          ></span>
+          <div
+            id="badge-connecting"
+            class="flex items-center gap-1.5 text-xs text-yellow-300/60"
+          >
+            <svg class="animate-spin w-3 h-3 shrink-0">
+              <use href="#ic-spin" />
+            </svg>
+            <span class="hidden sm:inline text-[11px]">Connecting…</span>
+          </div>
+          <div
+            id="badge-online"
+            class="hidden items-center gap-1.5 text-xs text-emerald-400"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-slow shrink-0"
+            ></span>
+            <span class="hidden sm:inline text-[11px]">Online</span>
+          </div>
+          <div
+            id="badge-offline"
+            class="hidden items-center gap-1.5 text-xs text-white/30"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-white/20 shrink-0"></span>
+            <span class="hidden sm:inline text-[11px]">Offline</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <a
+            href="/connect"
+            class="text-xs text-white/30 hover:text-white/70 transition-colors px-2 py-1.5"
+            >Switch</a
+          >
+          <a
+            href="/"
+            class="hidden sm:inline text-xs text-white/30 hover:text-white/70 transition-colors px-2 py-1.5"
+            >Home</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="overlay-error"
+      class="hidden fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/85 backdrop-blur-sm"
+    >
+      <div class="bpos-card-accent p-8 max-w-sm w-full text-center">
+        <p class="text-4xl mb-4">⚠️</p>
+        <h2 class="text-lg font-bold mb-2">Unknown Device</h2>
+        <p id="overlay-error-msg" class="text-white/50 text-sm mb-6">
+          This device key was not found.
+        </p>
+        <a href="/connect" class="btn-primary w-full block text-center py-3"
+          >← Back to devices</a
+        >
+      </div>
+    </div>
+
+    <main
+      class="relative z-10 flex-1 max-w-screen-md mx-auto w-full px-3 sm:px-5 py-4 space-y-4"
+    >
+      <div
+        id="offline-banner"
+        class="hidden bpos-card flex items-center gap-3 px-5 py-4"
+      >
+        <span class="w-2 h-2 rounded-full bg-white/25 shrink-0"></span>
+        <p class="text-sm text-white/45">
+          Device is offline. Waiting for it to reconnect…
+        </p>
+      </div>
+
+      <div id="stream-card" class="bpos-card-accent p-5 sm:p-7">
+        <div class="flex items-center justify-between mb-5">
+          <span
+            class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+            >Aggregate Bitrate</span
+          >
+          <span
+            id="stream-status"
+            class="text-[11px] font-semibold uppercase tracking-wider text-white/30"
+            >—</span
+          >
+        </div>
+
+        <div class="flex items-baseline gap-2.5 mb-2">
+          <span
+            id="total-kbps"
+            class="bpos-mono text-6xl sm:text-7xl font-bold tabular-nums leading-none bpos-gradient-text"
+            >0.0</span
+          >
+          <span class="text-lg text-white/35 font-medium self-end pb-1.5"
+            >Mbps</span
+          >
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mb-6">
+          <span
+            id="health-pill"
+            class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] text-white/40"
+            >standby</span
+          >
+          <span class="text-xs text-white/35 bpos-mono">
+            <span id="elapsed">00:00:00</span>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bpos-card px-4 py-3">
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              Resolution
+            </p>
+            <p id="resolution" class="text-sm font-semibold bpos-mono">—</p>
+          </div>
+          <div class="bpos-card px-4 py-3">
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              Encoder
+            </p>
+            <p id="encoder" class="text-sm font-semibold bpos-mono">—</p>
+          </div>
+          <div class="bpos-card px-4 py-3">
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              Target
+            </p>
+            <p id="target-kbps" class="text-sm font-semibold bpos-mono">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bpos-card p-5 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2
+            class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
+          >
+            Links
+          </h2>
+          <span id="links-total" class="text-xs bpos-mono font-semibold bpos-gradient-text"></span>
+        </div>
+        <div id="links-list" class="space-y-2.5">
+          <p class="text-sm text-white/20 py-4 text-center">
+            Waiting for device…
+          </p>
+        </div>
+      </div>
+
+      <div class="bpos-card p-5 sm:p-6">
+        <h2
+          class="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-4"
+        >
+          System
+        </h2>
+        <div id="system-grid" class="grid grid-cols-3 gap-3">
+          <div>
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              Temp
+            </p>
+            <p id="sys-temp" class="text-xl font-bold bpos-mono tabular-nums">—</p>
+          </div>
+          <div>
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              CPU
+            </p>
+            <p id="sys-cpu" class="text-xl font-bold bpos-mono tabular-nums">—</p>
+          </div>
+          <div>
+            <p
+              class="text-[9px] font-semibold text-white/30 uppercase tracking-widest mb-1.5"
+            >
+              Uptime
+            </p>
+            <p id="sys-uptime" class="text-xl font-bold bpos-mono tabular-nums">
+              —
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bpos-card p-5 space-y-2">
+        <p
+          class="text-[10px] font-semibold text-white/30 uppercase tracking-widest"
+        >
+          Device Key
+        </p>
+        <div
+          class="flex items-center gap-2 bg-white/[0.03] rounded-xl px-3 py-2.5 border border-white/[0.06]"
+        >
+          <code
+            id="key-display"
+            class="flex-1 text-xs bpos-mono text-white/40 truncate"
+          ></code>
+          <button
+            onclick="copyDeviceKey()"
+            title="Copy key"
+            class="text-white/20 hover:text-white/70 transition-colors p-1"
+          >
+            <svg width="13" height="13"><use href="#ic-copy" /></svg>
+          </button>
+          <button
+            onclick="copyControlUrl()"
+            title="Copy control URL"
+            class="text-white/20 hover:text-white/70 transition-colors p-1"
+          >
+            <svg width="13" height="13"><use href="#ic-link" /></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="relative z-10 border-t border-white/[0.05] px-4 sm:px-6 py-5 mt-4 shrink-0"
+    >
+      <div
+        class="max-w-screen-md mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/20"
+      >
+        <span
+          >Remote Encoder by
+          <a
+            href="https://provid.gg"
+            target="_blank"
+            rel="noopener"
+            class="text-white/35 hover:text-white transition-colors"
+            >PROVID</a
+          ></span
+        >
+        <div class="flex items-center gap-5">
+          <a
+            href="https://provid.gg/legal/imprint"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/50 transition-colors"
+            >Imprint</a
+          >
+          <a
+            href="https://provid.gg/legal/privacy"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-white/50 transition-colors"
+            >Privacy</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="/encoders/bpos/js/control.js"></script>
+  </body>
+</html>

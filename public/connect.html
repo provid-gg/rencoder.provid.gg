@@ -70,19 +70,13 @@
         <p
           class="text-[10px] font-semibold text-white/35 uppercase tracking-widest"
         >
-          Add by key
+          Add a device
         </p>
         <div class="flex gap-2 flex-wrap">
-          <select
-            id="encoder-select"
-            class="input-field text-sm shrink-0 w-auto pr-8"
-          >
-            <option value="bela">BELABOX</option>
-          </select>
           <input
             id="key-input"
             type="text"
-            placeholder="xxxxxxxx-xxxxxxxx"
+            placeholder="Paste your remote link or device key"
             class="input-field font-mono flex-1 min-w-0"
             autocomplete="off"
             autocorrect="off"
@@ -93,9 +87,13 @@
             Connect
           </button>
         </div>
+        <p class="text-[11px] text-white/30">
+          The link from your device already knows its type — just paste it. A
+          bare key opens a BackpackOS device.
+        </p>
         <p id="error-msg" class="hidden text-xs text-red-400">
-          Invalid key format — keys look like
-          <code class="text-red-300 font-mono">xxxxxxxx-xxxxxxxx</code>.
+          That doesn't look like a device link or key — copy it from your
+          device's Remote access settings.
         </p>
       </div>
 
@@ -147,6 +145,12 @@
     <script>
       const STORAGE_KEY = "rencoder_devices";
 
+      function controlUrl(encoder, key) {
+        return encoder === "bpos"
+          ? `/control/bpos/${key}/`
+          : `/control/${encoder ?? "bela"}/${key}`;
+      }
+
       function savedDevices() {
         try {
           return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
@@ -162,9 +166,12 @@
         renderSaved();
       }
 
-      async function checkOnline(key) {
+      async function checkOnline(key, encoder) {
         try {
-          const res = await fetch(`/api/devices/${key}/status`);
+          const res =
+            encoder === "bpos"
+              ? await fetch(`/internal-api/bpos/${key}/online`)
+              : await fetch(`/api/devices/${key}/status`);
           if (!res.ok) return false;
           return (await res.json()).isOnline;
         } catch {
@@ -188,14 +195,14 @@
           row.className =
             "flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.07] transition-all group cursor-pointer";
           row.innerHTML = `
-      <div class="flex items-center gap-2.5 flex-1 min-w-0" onclick="location.href='/control/${d.encoder ?? "bela"}/${d.key}'">
+      <div class="flex items-center gap-2.5 flex-1 min-w-0" onclick="location.href='${controlUrl(d.encoder, d.key)}'">
         <span class="status-dot w-2 h-2 rounded-full bg-white/20 shrink-0"></span>
         <div class="min-w-0">
           <p class="font-semibold text-sm truncate">${d.name ?? "Unnamed device"}</p>
           <p class="font-mono text-xs text-white/30 mt-0.5">${d.key}</p>
         </div>
       </div>
-      <button onclick="location.href='/control/${d.encoder ?? "bela"}/${d.key}'"
+      <button onclick="location.href='${controlUrl(d.encoder, d.key)}'"
               class="btn-primary shrink-0 px-4 py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
         Open →
       </button>
@@ -206,7 +213,7 @@
     `;
           container.appendChild(row);
 
-          checkOnline(d.key).then((online) => {
+          checkOnline(d.key, d.encoder).then((online) => {
             const dot = row.querySelector(".status-dot");
             if (!dot) return;
             if (online) {
@@ -221,23 +228,38 @@
         }
       }
 
+      function parseConnect(raw) {
+        const input = raw.trim();
+        if (!input) return null;
+        const m = input.match(
+          /\/control\/(bela|bpos|backpackos)\/([0-9a-f]{16,32}-[0-9a-f]{16,32})/i,
+        );
+        if (m) {
+          const enc = m[1].toLowerCase() === "bela" ? "bela" : "bpos";
+          return { encoder: enc, key: m[2].toLowerCase() };
+        }
+        if (/^[0-9a-f]{16,32}-[0-9a-f]{16,32}$/i.test(input)) {
+          return { encoder: "bpos", key: input.toLowerCase() };
+        }
+        return null;
+      }
+
       function goControl() {
-        const key = document.getElementById("key-input").value.trim();
-        const encoder = document.getElementById("encoder-select").value;
-        if (!/^[0-9a-f]{16}-[0-9a-f]{16}$/.test(key)) {
+        const parsed = parseConnect(document.getElementById("key-input").value);
+        if (!parsed) {
           document.getElementById("error-msg").classList.remove("hidden");
           document.getElementById("key-input").focus();
           return;
         }
-        const devices = savedDevices().filter((d) => d.key !== key);
+        const devices = savedDevices().filter((d) => d.key !== parsed.key);
         devices.unshift({
-          key,
-          encoder,
+          key: parsed.key,
+          encoder: parsed.encoder,
           name: null,
           addedAt: new Date().toISOString(),
         });
         saveDevices(devices.slice(0, 20));
-        location.href = `/control/${encoder}/${key}`;
+        location.href = controlUrl(parsed.encoder, parsed.key);
       }
 
       const input = document.getElementById("key-input");
