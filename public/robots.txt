@@ -1,6 +1,11 @@
+# ██████╗ ██████╗  ██████╗ ██╗   ██╗██╗██████╗
+# ██╔══██╗██╔══██╗██╔═══██╗██║   ██║██║██╔══██╗
+# ██████╔╝██████╔╝██║   ██║██║   ██║██║██║  ██║
+# ██╔═══╝ ██╔══██╗██║   ██║╚██╗ ██╔╝██║██║  ██║
+# ██║     ██║  ██║╚██████╔╝ ╚████╔╝ ██║██████╔╝
+# ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═══╝  ╚═╝╚═════╝
+#
+# Not for search indexing — disallow all crawlers.
+
 User-agent: *
-Disallow: /control/
-Disallow: /api/
-Disallow: /ws/
-Disallow: /scripts/
-Disallow: /install/
+Disallow: /
