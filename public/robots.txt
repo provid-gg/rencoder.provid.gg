@@ -6,6 +6,7 @@
 # ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═══╝  ╚═╝╚═════╝
 
 User-agent: *
+Allow: /
 Disallow: /control/
 Disallow: /api/
 Disallow: /ws/
