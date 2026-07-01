@@ -1,0 +1,47 @@
+stages:
+  - build
+
+default:
+  tags:
+    - docker
+
+.docker:
+  stage: build
+  image: docker:27
+  interruptible: true
+  variables:
+    DOCKER_BUILDKIT: "1"
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+build:dev:
+  extends: .docker
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE:dev" || true
+    - >
+      docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --cache-from "$CI_REGISTRY_IMAGE:dev"
+      --tag "$CI_REGISTRY_IMAGE:dev"
+      --tag "$CI_REGISTRY_IMAGE:dev-$CI_COMMIT_SHORT_SHA"
+      .
+    - docker push "$CI_REGISTRY_IMAGE:dev"
+    - docker push "$CI_REGISTRY_IMAGE:dev-$CI_COMMIT_SHORT_SHA"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'
+
+build:prod:
+  extends: .docker
+  script:
+    - docker pull "$CI_REGISTRY_IMAGE:latest" || true
+    - >
+      docker build
+      --build-arg BUILDKIT_INLINE_CACHE=1
+      --cache-from "$CI_REGISTRY_IMAGE:latest"
+      --tag "$CI_REGISTRY_IMAGE:latest"
+      --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+      .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
